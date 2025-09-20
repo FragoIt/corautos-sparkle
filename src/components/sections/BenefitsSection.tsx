@@ -1,12 +1,14 @@
-import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Shield, CreditCard, Wrench, Users, Clock, Award } from "lucide-react";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const BenefitsSection = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<HTMLDivElement[]>([]);
 
   const benefits = [
     {
@@ -47,15 +49,98 @@ const BenefitsSection = () => {
     }
   ];
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    const title = titleRef.current;
+    const cards = cardsRef.current;
+
+    if (!section || !title) return;
+
+    // Title animation
+    gsap.set(title, { opacity: 0, y: 50 });
+    
+    ScrollTrigger.create({
+      trigger: title,
+      start: "top 80%",
+      animation: gsap.to(title, {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power2.out"
+      }),
+      toggleActions: "play none none reverse"
+    });
+
+    // Cards staggered animation
+    cards.forEach((card, index) => {
+      if (!card) return;
+      
+      const isLeft = index % 2 === 0;
+      
+      gsap.set(card, { 
+        opacity: 0, 
+        x: isLeft ? -60 : 60,
+        y: 30 
+      });
+      
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top 85%",
+        animation: gsap.to(card, {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          delay: index * 0.15
+        }),
+        toggleActions: "play none none reverse"
+      });
+
+      // Icon hover animations
+      const icon = card.querySelector('.benefit-icon');
+      const cardContainer = card.querySelector('.benefit-card');
+      
+      if (icon && cardContainer) {
+        cardContainer.addEventListener('mouseenter', () => {
+          gsap.to(icon, { 
+            scale: 1.1, 
+            rotation: 5,
+            duration: 0.3, 
+            ease: "back.out(1.7)" 
+          });
+          gsap.to(cardContainer, { 
+            y: -8, 
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
+        });
+        
+        cardContainer.addEventListener('mouseleave', () => {
+          gsap.to(icon, { 
+            scale: 1, 
+            rotation: 0,
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
+          gsap.to(cardContainer, { 
+            y: 0, 
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
+        });
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
-    <section ref={ref} className="py-20 bg-muted/30">
+    <section ref={sectionRef} className="py-20 bg-muted/30">
       <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
+        <div ref={titleRef} className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
             ¿Por Qué Elegir{" "}
             <span className="bg-gradient-accent bg-clip-text text-transparent">
@@ -65,28 +150,20 @@ const BenefitsSection = () => {
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Más de una década de experiencia respaldando a nuestros clientes
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => (
-            <motion.div
+            <div
               key={benefit.title}
-              initial={{ 
-                opacity: 0, 
-                x: index % 2 === 0 ? -30 : 30,
-                y: 20 
+              ref={el => {
+                if (el) cardsRef.current[index] = el;
               }}
-              animate={inView ? { opacity: 1, x: 0, y: 0 } : {}}
-              transition={{ 
-                duration: 0.7, 
-                delay: index * 0.15,
-                ease: "easeOut"
-              }}
-              className="group"
+              className="group cursor-pointer"
             >
-              <div className="bg-card p-8 rounded-lg shadow-card hover:shadow-elegant transition-all duration-500 transform hover:scale-105 border border-border/50">
+              <div className="bg-card p-8 rounded-lg shadow-card hover:shadow-elegant transition-all duration-500 transform border border-border/50 benefit-card">
                 <div className="mb-6">
-                  <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br from-background to-muted ${benefit.color} shadow-md group-hover:shadow-lg transition-all duration-300 transform group-hover:scale-110`}>
+                  <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br from-background to-muted ${benefit.color} shadow-md benefit-icon`}>
                     <benefit.icon className="h-8 w-8" />
                   </div>
                 </div>
@@ -99,7 +176,7 @@ const BenefitsSection = () => {
                   {benefit.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
