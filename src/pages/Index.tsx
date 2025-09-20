@@ -1,12 +1,63 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from "react";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import HeroSection from "@/components/sections/HeroSection";
+import BrandsSection from "@/components/sections/BrandsSection";
+import BenefitsSection from "@/components/sections/BenefitsSection";
+import StatsSection from "@/components/sections/StatsSection";
+import TestimonialsSection from "@/components/sections/TestimonialsSection";
+import ContactSection from "@/components/sections/ContactSection";
 
 const Index = () => {
+  useEffect(() => {
+    // Smooth scrolling for anchor links
+    const handleSmoothScroll = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.hash) {
+        e.preventDefault();
+        const element = document.querySelector(target.hash);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleSmoothScroll);
+    return () => document.removeEventListener('click', handleSmoothScroll);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main>
+        <section id="inicio">
+          <HeroSection />
+        </section>
+        
+        <section id="marcas">
+          <BrandsSection />
+        </section>
+        
+        <section id="servicios">
+          <BenefitsSection />
+        </section>
+        
+        <StatsSection />
+        
+        <section id="nosotros">
+          <TestimonialsSection />
+        </section>
+        
+        <section id="contacto">
+          <ContactSection />
+        </section>
+      </main>
+      
+      <Footer />
     </div>
   );
 };
