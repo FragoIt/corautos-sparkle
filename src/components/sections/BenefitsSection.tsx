@@ -71,16 +71,19 @@ const BenefitsSection = () => {
       toggleActions: "play none none reverse"
     });
 
-    // Cards staggered animation
+    // Enhanced cards staggered animation with alternating sides
     cards.forEach((card, index) => {
       if (!card) return;
       
       const isLeft = index % 2 === 0;
+      const isTop = index < 3; // First row
       
       gsap.set(card, { 
         opacity: 0, 
-        x: isLeft ? -60 : 60,
-        y: 30 
+        x: isLeft ? -100 : 100,
+        y: isTop ? -40 : 40,
+        scale: 0.9,
+        rotation: isLeft ? -3 : 3
       });
       
       ScrollTrigger.create({
@@ -90,27 +93,38 @@ const BenefitsSection = () => {
           opacity: 1,
           x: 0,
           y: 0,
-          duration: 0.7,
-          ease: "power2.out",
-          delay: index * 0.15
+          scale: 1,
+          rotation: 0,
+          duration: 0.8,
+          ease: "back.out(1.2)",
+          delay: index * 0.12
         }),
         toggleActions: "play none none reverse"
       });
 
-      // Icon hover animations
+      // Enhanced icon hover animations
       const icon = card.querySelector('.benefit-icon');
       const cardContainer = card.querySelector('.benefit-card');
+      const title = card.querySelector('.benefit-title');
       
-      if (icon && cardContainer) {
+      if (icon && cardContainer && title) {
         cardContainer.addEventListener('mouseenter', () => {
           gsap.to(icon, { 
-            scale: 1.1, 
-            rotation: 5,
-            duration: 0.3, 
+            scale: 1.15, 
+            rotation: 12,
+            duration: 0.4, 
             ease: "back.out(1.7)" 
           });
           gsap.to(cardContainer, { 
-            y: -8, 
+            y: -12, 
+            scale: 1.02,
+            boxShadow: "0 20px 40px -10px rgba(0,0,0,0.3)",
+            duration: 0.4, 
+            ease: "power2.out" 
+          });
+          gsap.to(title, { 
+            color: "hsl(var(--primary))",
+            scale: 1.03,
             duration: 0.3, 
             ease: "power2.out" 
           });
@@ -120,11 +134,19 @@ const BenefitsSection = () => {
           gsap.to(icon, { 
             scale: 1, 
             rotation: 0,
-            duration: 0.3, 
+            duration: 0.4, 
             ease: "power2.out" 
           });
           gsap.to(cardContainer, { 
             y: 0, 
+            scale: 1,
+            boxShadow: "0 0px 0px 0px rgba(0,0,0,0)",
+            duration: 0.4, 
+            ease: "power2.out" 
+          });
+          gsap.to(title, { 
+            color: "inherit",
+            scale: 1,
             duration: 0.3, 
             ease: "power2.out" 
           });
@@ -168,7 +190,7 @@ const BenefitsSection = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold mb-4 group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-xl font-bold mb-4 benefit-title transition-colors duration-300">
                   {benefit.title}
                 </h3>
                 

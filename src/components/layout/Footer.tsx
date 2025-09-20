@@ -68,15 +68,17 @@ const Footer = () => {
       });
     });
 
-    // Social icons hover animations
+    // Enhanced social icons hover animations
     if (social) {
       const socialIcons = social.querySelectorAll('.social-icon');
-      socialIcons.forEach(icon => {
+      socialIcons.forEach((icon, index) => {
         icon.addEventListener('mouseenter', () => {
           gsap.to(icon, { 
-            scale: 1.2, 
-            rotation: 10,
-            duration: 0.3, 
+            scale: 1.3, 
+            rotation: 15,
+            backgroundColor: "hsl(var(--accent-light) / 0.3)",
+            boxShadow: "0 8px 25px -5px hsl(var(--accent) / 0.4)",
+            duration: 0.4, 
             ease: "back.out(1.7)" 
           });
         });
@@ -85,9 +87,21 @@ const Footer = () => {
           gsap.to(icon, { 
             scale: 1, 
             rotation: 0,
-            duration: 0.3, 
+            backgroundColor: "rgba(255,255,255,0.1)",
+            boxShadow: "0 0px 0px 0px transparent",
+            duration: 0.4, 
             ease: "power2.out" 
           });
+        });
+
+        // Staggered entrance animation for social icons
+        gsap.set(icon, { opacity: 0, scale: 0 });
+        gsap.to(icon, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          delay: 0.8 + index * 0.1,
+          ease: "back.out(1.7)"
         });
       });
     }

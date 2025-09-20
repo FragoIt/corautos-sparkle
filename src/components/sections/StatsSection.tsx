@@ -73,27 +73,31 @@ const StatsSection = () => {
                 delay: index * 0.2,
                 ease: "easeOut"
               }}
-              className="text-center group"
+              className="text-center group cursor-pointer"
             >
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:scale-105">
-                <div className="text-4xl lg:text-5xl font-bold text-white mb-2">
+              <div className="bg-white/15 backdrop-blur-md rounded-xl p-8 border border-white/30 hover:bg-white/25 transition-all duration-700 transform hover:scale-105 hover:rotate-1 shadow-lg hover:shadow-2xl">
+                <div className="text-4xl lg:text-5xl font-bold text-white mb-2 drop-shadow-lg">
                   {inView && (
                     <CountUp
                       end={stat.number}
-                      duration={2.5}
+                      duration={3}
                       separator=","
                       suffix={stat.suffix}
+                      useEasing={true}
                     />
                   )}
                 </div>
                 
-                <h3 className="text-lg font-semibold text-accent-light mb-2">
+                <h3 className="text-lg font-semibold text-accent-light mb-2 group-hover:scale-105 transition-transform duration-300">
                   {stat.label}
                 </h3>
                 
-                <p className="text-sm text-white/70 leading-relaxed">
+                <p className="text-sm text-white/80 leading-relaxed group-hover:text-white/95 transition-colors duration-300">
                   {stat.description}
                 </p>
+                
+                {/* Decorative element */}
+                <div className="absolute top-2 right-2 w-3 h-3 bg-accent-light/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             </motion.div>
           ))}

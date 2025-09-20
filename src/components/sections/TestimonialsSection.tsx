@@ -116,20 +116,94 @@ const TestimonialsSection = () => {
       });
     });
 
-    // Team image parallax
+    // Enhanced team image with parallax and crossfade setup
     const teamImg = story.querySelector('img');
     if (teamImg) {
+      // Parallax effect for team image
       ScrollTrigger.create({
         trigger: story,
         start: "top bottom",
         end: "bottom top",
-        scrub: 1,
+        scrub: 1.5,
         onUpdate: (self) => {
           const progress = self.progress;
-          gsap.set(teamImg, { y: progress * -50 });
+          gsap.set(teamImg, { 
+            y: progress * -80,
+            scale: 1 + progress * 0.1
+          });
         }
       });
+
+      // Enhanced image hover effect
+      const imageContainer = teamImg.parentElement;
+      if (imageContainer) {
+        imageContainer.addEventListener('mouseenter', () => {
+          gsap.to(teamImg, { 
+            scale: 1.08, 
+            duration: 0.8, 
+            ease: "power3.out" 
+          });
+        });
+        
+        imageContainer.addEventListener('mouseleave', () => {
+          gsap.to(teamImg, { 
+            scale: 1, 
+            duration: 0.8, 
+            ease: "power3.out" 
+          });
+        });
+      }
     }
+
+    // Enhanced testimonial cards with sophisticated animations
+    cards.forEach((card, index) => {
+      if (!card) return;
+      
+      gsap.set(card, { 
+        opacity: 0, 
+        y: 80, 
+        scale: 0.85,
+        rotation: index % 2 === 0 ? -2 : 2
+      });
+      
+      ScrollTrigger.create({
+        trigger: card,
+        start: "top 85%",
+        animation: gsap.to(card, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          duration: 0.8,
+          ease: "back.out(1.4)",
+          delay: 0.4 + index * 0.15
+        }),
+        toggleActions: "play none none reverse"
+      });
+
+      // Enhanced card hover animation with depth
+      card.addEventListener('mouseenter', () => {
+        gsap.to(card, { 
+          y: -12, 
+          scale: 1.03,
+          rotation: index % 2 === 0 ? 1 : -1,
+          boxShadow: "0 25px 50px -10px rgba(0,0,0,0.25)",
+          duration: 0.4, 
+          ease: "power3.out" 
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, { 
+          y: 0, 
+          scale: 1,
+          rotation: 0,
+          boxShadow: "0 0px 0px 0px rgba(0,0,0,0)",
+          duration: 0.4, 
+          ease: "power3.out" 
+        });
+      });
+    });
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -138,20 +212,21 @@ const TestimonialsSection = () => {
 
   return (
     <section ref={sectionRef} className="py-20 bg-muted/30 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-accent rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-primary rounded-full blur-3xl" />
+      {/* Enhanced Background Elements */}
+      <div className="absolute inset-0 opacity-8">
+        <div className="absolute top-20 left-10 w-32 h-32 bg-accent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-40 h-40 bg-primary rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute top-1/2 left-1/2 w-20 h-20 bg-accent-light rounded-full blur-2xl animate-pulse delay-2000" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Story Section */}
+          {/* Enhanced Story Section */}
           <div ref={storyRef}>
             <div className="space-y-6">
               <h2 className="text-4xl md:text-5xl font-bold">
                 Historias de{" "}
-                <span className="bg-gradient-accent bg-clip-text text-transparent">
+                <span className="bg-gradient-accent bg-clip-text text-transparent drop-shadow-sm">
                   Éxito
                 </span>
               </h2>
@@ -167,10 +242,11 @@ const TestimonialsSection = () => {
                   alt="Equipo profesional de Corautos Andino"
                   className="w-full h-80 object-cover transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <h3 className="text-xl font-bold mb-2">Nuestro Equipo</h3>
-                  <p className="text-white/90">
+                  <h3 className="text-xl font-bold mb-2 drop-shadow-md">Nuestro Equipo</h3>
+                  <p className="text-white/95 drop-shadow-sm">
                     Profesionales comprometidos con tu satisfacción
                   </p>
                 </div>
@@ -178,11 +254,12 @@ const TestimonialsSection = () => {
             </div>
           </div>
 
-          {/* Testimonials */}
+          {/* Enhanced Testimonials */}
           <div ref={testimonialsRef} className="space-y-6">
             <div className="text-center mb-8">
               <h3 className="text-2xl font-bold mb-4">
-                Lo Que Dicen Nuestros Clientes
+                Lo Que Dicen Nuestros{" "}
+                <span className="text-primary">Clientes</span>
               </h3>
               <p className="text-muted-foreground">
                 Testimonios reales de quienes confían en nosotros
@@ -197,7 +274,7 @@ const TestimonialsSection = () => {
                     if (el) cardRefs.current[index] = el;
                   }}
                 >
-                  <Card className="shadow-card hover:shadow-elegant transition-all duration-500 border border-border/50 cursor-pointer">
+                  <Card className="shadow-card hover:shadow-elegant transition-all duration-500 border border-border/50 cursor-pointer bg-card/80 backdrop-blur-sm">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-4">
                         <div className="flex-shrink-0">
@@ -211,7 +288,14 @@ const TestimonialsSection = () => {
                           
                           <div className="flex items-center gap-1 mb-3">
                             {[...Array(testimonial.rating)].map((_, i) => (
-                              <Star key={i} className="h-4 w-4 fill-accent text-accent animate-pulse" />
+                              <Star 
+                                key={i} 
+                                className="h-4 w-4 fill-accent text-accent" 
+                                style={{ 
+                                  animationDelay: `${i * 0.1}s`,
+                                  animation: "pulse 2s infinite" 
+                                }}
+                              />
                             ))}
                           </div>
                           

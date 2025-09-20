@@ -82,19 +82,48 @@ const BrandsSection = () => {
         toggleActions: "play none none reverse"
       });
 
-      // Hover animations for cards
+      // Enhanced hover animations for cards
       const cardImage = card.querySelector('img');
       const cardContent = card.querySelector('.card-content');
+      const brandName = card.querySelector('.brand-name');
       
-      if (cardImage && cardContent) {
+      if (cardImage && cardContent && brandName) {
         card.addEventListener('mouseenter', () => {
-          gsap.to(cardImage, { scale: 1.1, duration: 0.6, ease: "power2.out" });
-          gsap.to(cardContent, { y: -5, duration: 0.3, ease: "power2.out" });
+          gsap.to(cardImage, { 
+            scale: 1.15, 
+            duration: 0.8, 
+            ease: "power3.out" 
+          });
+          gsap.to(cardContent, { 
+            y: -8, 
+            duration: 0.4, 
+            ease: "power2.out" 
+          });
+          gsap.to(brandName, { 
+            scale: 1.08, 
+            color: "hsl(var(--accent-light))",
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
         });
         
         card.addEventListener('mouseleave', () => {
-          gsap.to(cardImage, { scale: 1, duration: 0.6, ease: "power2.out" });
-          gsap.to(cardContent, { y: 0, duration: 0.3, ease: "power2.out" });
+          gsap.to(cardImage, { 
+            scale: 1, 
+            duration: 0.8, 
+            ease: "power3.out" 
+          });
+          gsap.to(cardContent, { 
+            y: 0, 
+            duration: 0.4, 
+            ease: "power2.out" 
+          });
+          gsap.to(brandName, { 
+            scale: 1, 
+            color: "inherit",
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
         });
       }
     });
@@ -137,10 +166,10 @@ const BrandsSection = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6 text-white">
-                    <h3 className="text-3xl font-bold mb-2 group-hover:scale-105 transition-transform duration-300">
+                    <h3 className="text-3xl font-bold mb-2 brand-name transition-all duration-300">
                       {brand.name}
                     </h3>
-                    <p className="text-lg font-medium text-accent-light">{brand.description}</p>
+                    <p className="text-lg font-medium text-accent-light drop-shadow-md">{brand.description}</p>
                   </div>
                 </div>
                 

@@ -140,13 +140,15 @@ const ContactSection = () => {
       });
     });
 
-    // Form inputs focus animations
+    // Enhanced form inputs focus animations
     const inputs = form.querySelectorAll('input, textarea');
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
         gsap.to(input, { 
-          scale: 1.02,
-          duration: 0.2, 
+          scale: 1.03,
+          borderColor: "hsl(var(--primary))",
+          boxShadow: "0 0 0 3px hsl(var(--primary) / 0.1)",
+          duration: 0.3, 
           ease: "power2.out" 
         });
       });
@@ -154,11 +156,46 @@ const ContactSection = () => {
       input.addEventListener('blur', () => {
         gsap.to(input, { 
           scale: 1,
-          duration: 0.2, 
+          borderColor: "hsl(var(--border))",
+          boxShadow: "0 0 0 0px transparent",
+          duration: 0.3, 
           ease: "power2.out" 
         });
       });
+
+      // Real-time validation visual feedback
+      input.addEventListener('input', () => {
+        const inputElement = input as HTMLInputElement | HTMLTextAreaElement;
+        const isValid = inputElement.checkValidity();
+        gsap.to(inputElement, {
+          borderColor: isValid ? "hsl(var(--accent))" : "hsl(var(--destructive))",
+          duration: 0.2,
+          ease: "power2.out"
+        });
+      });
     });
+
+    // Enhanced submit button animation
+    const submitBtn = form.querySelector('button[type="submit"], .cta-button');
+    if (submitBtn) {
+      submitBtn.addEventListener('mouseenter', () => {
+        gsap.to(submitBtn, {
+          scale: 1.05,
+          boxShadow: "0 10px 30px -5px hsl(var(--primary) / 0.4)",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      submitBtn.addEventListener('mouseleave', () => {
+        gsap.to(submitBtn, {
+          scale: 1,
+          boxShadow: "0 0px 0px 0px transparent",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      });
+    }
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -243,10 +280,11 @@ const ContactSection = () => {
                 <Button 
                   variant="cta" 
                   size="lg" 
-                  className="w-full hover:scale-105 transition-all duration-300 group"
+                  className="w-full cta-button group relative overflow-hidden"
                 >
-                  Enviar Solicitud
-                  <div className="ml-2 transform group-hover:translate-x-1 transition-transform duration-200">
+                  <span className="relative z-10">Enviar Solicitud</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="ml-2 transform group-hover:translate-x-2 transition-transform duration-300 relative z-10">
                     →
                   </div>
                 </Button>
