@@ -1,6 +1,4 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
   Facebook, 
@@ -12,13 +10,7 @@ import {
   MessageCircle 
 } from "lucide-react";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Footer = () => {
-  const footerRef = useRef<HTMLDivElement>(null);
-  const sectionsRef = useRef<HTMLDivElement[]>([]);
-  const socialRef = useRef<HTMLDivElement>(null);
-
   const socialLinks = [
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Instagram, href: "#", label: "Instagram" },
@@ -41,78 +33,8 @@ const Footer = () => {
     "Repuestos Originales",
   ];
 
-  useEffect(() => {
-    const footer = footerRef.current;
-    const sections = sectionsRef.current;
-    const social = socialRef.current;
-
-    if (!footer) return;
-
-    // Footer sections animation
-    sections.forEach((section, index) => {
-      if (!section) return;
-      
-      gsap.set(section, { opacity: 0, y: 50 });
-      
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 90%",
-        animation: gsap.to(section, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: "power2.out",
-          delay: index * 0.1
-        }),
-        toggleActions: "play none none reverse"
-      });
-    });
-
-    // Enhanced social icons hover animations
-    if (social) {
-      const socialIcons = social.querySelectorAll('.social-icon');
-      socialIcons.forEach((icon, index) => {
-        icon.addEventListener('mouseenter', () => {
-          gsap.to(icon, { 
-            scale: 1.3, 
-            rotation: 15,
-            backgroundColor: "hsl(var(--accent-light) / 0.3)",
-            boxShadow: "0 8px 25px -5px hsl(var(--accent) / 0.4)",
-            duration: 0.4, 
-            ease: "back.out(1.7)" 
-          });
-        });
-        
-        icon.addEventListener('mouseleave', () => {
-          gsap.to(icon, { 
-            scale: 1, 
-            rotation: 0,
-            backgroundColor: "rgba(255,255,255,0.1)",
-            boxShadow: "0 0px 0px 0px transparent",
-            duration: 0.4, 
-            ease: "power2.out" 
-          });
-        });
-
-        // Staggered entrance animation for social icons
-        gsap.set(icon, { opacity: 0, scale: 0 });
-        gsap.to(icon, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.5,
-          delay: 0.8 + index * 0.1,
-          ease: "back.out(1.7)"
-        });
-      });
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-    };
-  }, []);
-
   return (
-    <footer ref={footerRef} className="bg-gradient-primary text-white relative overflow-hidden">
+    <footer className="bg-gradient-primary text-white relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0" style={{
@@ -123,10 +45,11 @@ const Footer = () => {
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-8">
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
           {/* Company Info */}
-          <div
-            ref={el => {
-              if (el) sectionsRef.current[0] = el;
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
             className="lg:col-span-1"
           >
             <div className="flex items-center space-x-3 mb-6">
@@ -162,13 +85,14 @@ const Footer = () => {
                 <span className="text-sm">Colombia</span>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div
-            ref={el => {
-              if (el) sectionsRef.current[1] = el;
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true }}
           >
             <h4 className="font-bold text-lg mb-6 text-accent-light">Marcas</h4>
             <ul className="space-y-3">
@@ -178,20 +102,21 @@ const Footer = () => {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white/80 hover:text-accent-light transition-colors duration-300 hover:translate-x-1 transform inline-block"
+                    className="text-white/80 hover:text-accent-light transition-colors duration-300"
                   >
                     {link.name}
                   </a>
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Services */}
-          <div
-            ref={el => {
-              if (el) sectionsRef.current[2] = el;
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true }}
           >
             <h4 className="font-bold text-lg mb-6 text-accent-light">Servicios</h4>
             <ul className="space-y-3">
@@ -201,25 +126,28 @@ const Footer = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </motion.div>
 
           {/* Newsletter & Social */}
-          <div
-            ref={el => {
-              if (el) sectionsRef.current[3] = el;
-            }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true }}
           >
             <h4 className="font-bold text-lg mb-6 text-accent-light">Síguenos</h4>
             
-            <div ref={socialRef} className="flex space-x-4 mb-6">
+            <div className="flex space-x-4 mb-6">
               {socialLinks.map((social) => (
-                <a
+                <motion.a
                   key={social.label}
                   href={social.href}
-                  className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center hover:bg-accent-light/20 transition-all duration-300 social-icon cursor-pointer"
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="w-10 h-10 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center hover:bg-accent-light/20 transition-all duration-300"
                 >
                   <social.icon className="h-5 w-5" />
-                </a>
+                </motion.a>
               ))}
             </div>
 
@@ -231,34 +159,40 @@ const Footer = () => {
               <Button
                 variant="hero"
                 size="sm"
-                className="w-full hover:scale-105 transition-all duration-300"
+                className="w-full"
                 onClick={() => window.open("https://api.whatsapp.com/send?phone=573174375399&text=Hola%20Me%20Interesa%20un%20Veh%C3%ADculo%20Nuevo", "_blank")}
               >
                 <MessageCircle className="mr-2 h-4 w-4" />
                 Escribir por WhatsApp
               </Button>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4"
+        >
           <p className="text-white/60 text-sm text-center md:text-left">
             © 2024 Corautos Andino. Todos los derechos reservados.
           </p>
           
           <div className="flex flex-wrap gap-6 text-sm">
-            <a href="#" className="text-white/60 hover:text-accent-light transition-colors hover:scale-105 transform inline-block duration-300">
+            <a href="#" className="text-white/60 hover:text-accent-light transition-colors">
               Términos y Condiciones
             </a>
-            <a href="#" className="text-white/60 hover:text-accent-light transition-colors hover:scale-105 transform inline-block duration-300">
+            <a href="#" className="text-white/60 hover:text-accent-light transition-colors">
               Política de Privacidad
             </a>
-            <a href="#" className="text-white/60 hover:text-accent-light transition-colors hover:scale-105 transform inline-block duration-300">
+            <a href="#" className="text-white/60 hover:text-accent-light transition-colors">
               Política de Cookies
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
