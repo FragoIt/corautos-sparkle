@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import HeroStorySection from "@/components/sections/HeroStorySection";
-import ImageTextSection from "@/components/sections/ImageTextSection";
-import NarrativeSection from "@/components/sections/NarrativeSection";
-import AppleStyleSection from "@/components/sections/AppleStyleSection";
-import FinalCTASection from "@/components/sections/FinalCTASection";
 import BrandsSection from "@/components/sections/BrandsSection";
+import BenefitsSection from "@/components/sections/BenefitsSection";
 import StatsSection from "@/components/sections/StatsSection";
+import TestimonialsSection from "@/components/sections/TestimonialsSection";
+import ContactSection from "@/components/sections/ContactSection";
 
 const Index = () => {
   useEffect(() => {
@@ -39,26 +38,22 @@ const Index = () => {
           <HeroStorySection />
         </section>
         
-        <section id="historia">
-          <ImageTextSection />
-        </section>
-        
-        <section id="narrativa">
-          <NarrativeSection />
-        </section>
-        
-        <section id="experiencia">
-          <AppleStyleSection />
-        </section>
-        
         <section id="marcas">
           <BrandsSection />
         </section>
         
+        <section id="servicios">
+          <BenefitsSection />
+        </section>
+        
         <StatsSection />
         
+        <section id="nosotros">
+          <TestimonialsSection />
+        </section>
+        
         <section id="contacto">
-          <FinalCTASection />
+          <ContactSection />
         </section>
       </main>
       
