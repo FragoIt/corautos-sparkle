@@ -71,46 +71,76 @@ const BenefitsSection = () => {
       toggleActions: "play none none reverse"
     });
 
-    // Cards staggered animation
+    // Cards staggered animation with separate icon and text animations
     cards.forEach((card, index) => {
       if (!card) return;
       
-      const isLeft = index % 2 === 0;
+      const icon = card.querySelector('.benefit-icon');
+      const titleElement = card.querySelector('.benefit-title');
+      const description = card.querySelector('.benefit-description');
+      const cardContainer = card.querySelector('.benefit-card');
       
-      gsap.set(card, { 
-        opacity: 0, 
-        x: isLeft ? -60 : 60,
-        y: 30 
-      });
+      if (!icon || !titleElement || !description || !cardContainer) return;
+
+      // Set initial states
+      gsap.set(cardContainer, { opacity: 0 });
+      gsap.set(icon, { scale: 0, opacity: 0 });
+      gsap.set([titleElement, description], { opacity: 0, y: 30 });
       
       ScrollTrigger.create({
         trigger: card,
         start: "top 85%",
-        animation: gsap.to(card, {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.7,
-          ease: "power2.out",
-          delay: index * 0.15
-        }),
+        animation: gsap.timeline({ delay: index * 0.15 })
+          // First: Fade in card container
+          .to(cardContainer, {
+            opacity: 1,
+            duration: 0.3,
+            ease: "power2.out"
+          })
+          // Second: Icon scale-up and fade
+          .to(icon, {
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: "back.out(1.7)",
+            delay: 0.1
+          }, "-=0.1")
+          // Third: Title slide-up with delay
+          .to(titleElement, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            delay: 0.2
+          }, "-=0.3")
+          // Fourth: Description slide-up with additional delay
+          .to(description, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            delay: 0.1
+          }, "-=0.3"),
         toggleActions: "play none none reverse"
       });
 
-      // Icon hover animations
-      const icon = card.querySelector('.benefit-icon');
-      const cardContainer = card.querySelector('.benefit-card');
-      
-      if (icon && cardContainer) {
+      // Enhanced hover animations
+      if (cardContainer) {
         cardContainer.addEventListener('mouseenter', () => {
           gsap.to(icon, { 
-            scale: 1.1, 
+            scale: 1.15, 
             rotation: 5,
             duration: 0.3, 
             ease: "back.out(1.7)" 
           });
           gsap.to(cardContainer, { 
-            y: -8, 
+            y: -8,
+            scale: 1.02,
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
+          gsap.to([titleElement, description], { 
+            y: -2,
             duration: 0.3, 
             ease: "power2.out" 
           });
@@ -124,7 +154,13 @@ const BenefitsSection = () => {
             ease: "power2.out" 
           });
           gsap.to(cardContainer, { 
-            y: 0, 
+            y: 0,
+            scale: 1,
+            duration: 0.3, 
+            ease: "power2.out" 
+          });
+          gsap.to([titleElement, description], { 
+            y: 0,
             duration: 0.3, 
             ease: "power2.out" 
           });
@@ -168,11 +204,11 @@ const BenefitsSection = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-xl font-bold mb-4 group-hover:text-primary transition-colors duration-300">
+                <h3 className="benefit-title text-xl font-bold mb-4 group-hover:text-primary transition-colors duration-300">
                   {benefit.title}
                 </h3>
                 
-                <p className="text-muted-foreground leading-relaxed">
+                <p className="benefit-description text-muted-foreground leading-relaxed">
                   {benefit.description}
                 </p>
               </div>
